@@ -105,6 +105,14 @@ abstract class ClassGenerator
     }
 
     /**
+     * @return null|string
+     */
+    protected function formExtends()
+    {
+        return null;
+    }
+
+    /**
      * @param $params
      * @return string
      * @throws \Exception
@@ -117,8 +125,8 @@ abstract class ClassGenerator
             throw new \Exception('The class name was not set, update $className parameter or implement formClassName()');
         }
         $class = $this->getPhpClass($className);
-        if ($this->extends) {
-            $this->phpClass->addExtend($this->extends);
+        if ($extends = ($this->extends ? $this->extends : $this->formExtends())) {
+            $this->phpClass->addExtend($extends);
         }
         $reflection = new \ReflectionClass($this);
         foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
