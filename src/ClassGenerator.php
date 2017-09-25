@@ -145,7 +145,7 @@ abstract class ClassGenerator
         foreach ($this->phpDocComments() as $comment) {
             $this->phpClass->addComment($comment);
         }
-        foreach (array_filter($this->phpDocProperties()) as $property => $value) {
+        foreach (array_filter($this->phpProperties()) as $property => $value) {
             $this->phpClass->addProperty($property, $value);
         }
         foreach (array_filter($this->classConstants()) as $constant => $value) {
@@ -199,7 +199,7 @@ abstract class ClassGenerator
     /**
      * @return array
      */
-    protected function phpDocProperties()
+    protected function phpProperties()
     {
         return [];
     }
