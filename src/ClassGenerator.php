@@ -25,6 +25,7 @@ abstract class ClassGenerator
     public $namespace;
     public $className;
     public $extends;
+    public $output;
 
     protected $params = [];
     /**
@@ -88,7 +89,7 @@ abstract class ClassGenerator
     }
 
     /**
-     * @return null
+     * @return null|string
      */
     protected function formClassNamespace()
     {
@@ -116,7 +117,9 @@ abstract class ClassGenerator
             throw new \Exception('The class name was not set, update $className parameter or implement formClassName()');
         }
         $class = $this->getPhpClass($className);
-        $this->phpClass->addExtend($this->extends);
+        if ($this->extends) {
+            $this->phpClass->addExtend($this->extends);
+        }
         $reflection = new \ReflectionClass($this);
         foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
             if (!in_array($method->name, $this->exceptRenderMethods)) {
@@ -146,7 +149,16 @@ abstract class ClassGenerator
         $this->classAfterRender();
         $generatedBy = $this->classGeneratedBy();
         $this->phpFile->addComment(is_array($generatedBy) ? join("\n", $generatedBy) : $generatedBy);
+        $this->output = $this->formOutputPath();
         return (string)$this->phpFile;
+    }
+
+    /**
+     * @return null|string
+     */
+    protected function formOutputPath()
+    {
+        return null;
     }
 
     /**
