@@ -43,6 +43,18 @@ abstract class ClassGenerator
     protected $exceptRenderMethods = [
         'render',
         'renderToFile',
+        'classUses',
+        'classAfterRender',
+        'classGeneratedBy',
+        'formClassNamespace',
+        'formClassName',
+        'formExtends',
+        'formOutputPath',
+        'classTraits',
+        'classImplements',
+        'phpDocComments',
+        'phpProperties',
+        'classConstants',
         '__construct'
     ];
 
@@ -154,6 +166,9 @@ abstract class ClassGenerator
         foreach (array_filter($this->classTraits()) as $trait => $resolutions) {
             $this->phpClass->addTrait(is_numeric($trait) ? $resolutions : $trait, is_numeric($trait) ? [] : $resolutions);
         }
+        foreach (array_filter($this->classImplements()) as $implement) {
+            $this->phpClass->addImplement($implement);
+        }
         $this->classAfterRender();
         $generatedBy = $this->classGeneratedBy();
         $this->phpFile->addComment(is_array($generatedBy) ? join("\n", $generatedBy) : $generatedBy);
@@ -174,16 +189,24 @@ abstract class ClassGenerator
      * @param $params
      * @return bool|int
      */
-    public function renderToFile($filePath, $params = [])
+    public function renderToFile($params = [], $filePath = null)
     {
         $content = $this->render($params);
-        return file_put_contents($filePath, $content);
+        return file_put_contents($filePath ? $filePath : $this->output, $content);
     }
 
     /**
      * @return array
      */
     protected function classTraits()
+    {
+        return [];
+    }
+
+    /**
+     * @return array
+     */
+    protected function classImplements()
     {
         return [];
     }
