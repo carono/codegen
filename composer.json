@@ -1,0 +1,20 @@
+{
+  "name": "carono/codegen",
+  "description": "",
+  "type": "library",
+  "authors": [
+    {
+      "homepage": "http://carono.ru",
+      "name": "Aleksandr Kasyanov",
+      "email": "info@carono.ru"
+    }
+  ],
+  "require": {
+    "nette/php-generator": "^2.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "carono\\codegen\\": "src"
+    }
+  }
+}
