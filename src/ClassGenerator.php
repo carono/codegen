@@ -13,8 +13,12 @@ use Nette\PhpGenerator\PhpNamespace;
  *
  * @package carono\codegen
  */
-class ClassGenerator
+abstract class ClassGenerator
 {
+    /**
+     * External generator
+     * @var mixed
+     */
     public $generator;
     public $namespace;
     public $extends;
@@ -34,6 +38,7 @@ class ClassGenerator
     protected $phpFile;
     protected $exceptRenderMethods = [
         'render',
+        'renderToFile',
         '__construct'
     ];
 
@@ -75,7 +80,7 @@ class ClassGenerator
     protected function classGeneratedBy()
     {
         return [
-            'The class is generated using the package carono/codegen'
+            'This class is generated using the package carono/codegen'
         ];
     }
 
@@ -87,7 +92,7 @@ class ClassGenerator
     public function render($params)
     {
         $className = $this->className;
-        if (!$className){
+        if (!$className) {
             throw new \Exception('The class name was not set, update $className parameter');
         }
         $class = $this->getPhpClass($className);
@@ -122,7 +127,18 @@ class ClassGenerator
         $this->classAfterRender();
         $generatedBy = $this->classGeneratedBy();
         $this->phpFile->addComment(is_array($generatedBy) ? join("\n", $generatedBy) : $generatedBy);
-        return "<?php\n\n" . (string)$this->phpNamespace;
+        return (string)$this->phpFile;
+    }
+
+    /**
+     * @param $filePath
+     * @param $params
+     * @return bool|int
+     */
+    public function renderToFile($filePath, $params)
+    {
+        $content = $this->render($params);
+        return file_put_contents($filePath, $content);
     }
 
     /**
