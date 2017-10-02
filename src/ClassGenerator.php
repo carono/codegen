@@ -17,13 +17,16 @@ abstract class ClassGenerator
 {
     /**
      * External generator
+     *
      * @var mixed
      */
     public $generator;
+
     public $namespace;
-    public $extends;
-    public $params = [];
     public $className;
+    public $extends;
+
+    protected $params = [];
     /**
      * @var ClassType
      */
@@ -58,7 +61,7 @@ abstract class ClassGenerator
     {
         if (!$this->phpClass) {
             $this->phpFile = new PhpFile();
-            $namespace = $this->phpFile->addNamespace($this->namespace);
+            $namespace = $this->phpFile->addNamespace($this->namespace ? $this->namespace : $this->formClassNamespace());
             $this->phpNamespace = $namespace;
             return $this->phpClass = $namespace->addClass($className);
         } else {
@@ -85,19 +88,35 @@ abstract class ClassGenerator
     }
 
     /**
+     * @return null
+     */
+    protected function formClassNamespace()
+    {
+        return null;
+    }
+
+    /**
+     * @return null|string
+     */
+    protected function formClassName()
+    {
+        return null;
+    }
+
+    /**
      * @param $params
      * @return string
      * @throws \Exception
      */
-    public function render($params)
+    public function render($params = [])
     {
-        $className = $this->className;
+        $this->params = $params;
+        $className = $this->className ? $this->className : $this->formClassName();
         if (!$className) {
-            throw new \Exception('The class name was not set, update $className parameter');
+            throw new \Exception('The class name was not set, update $className parameter or implement formClassName()');
         }
         $class = $this->getPhpClass($className);
         $this->phpClass->addExtend($this->extends);
-        $this->params = $params;
         $reflection = new \ReflectionClass($this);
         foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
             if (!in_array($method->name, $this->exceptRenderMethods)) {
@@ -135,7 +154,7 @@ abstract class ClassGenerator
      * @param $params
      * @return bool|int
      */
-    public function renderToFile($filePath, $params)
+    public function renderToFile($filePath, $params = [])
     {
         $content = $this->render($params);
         return file_put_contents($filePath, $content);
