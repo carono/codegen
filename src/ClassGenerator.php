@@ -125,6 +125,26 @@ abstract class ClassGenerator
     }
 
     /**
+     * @param ClassType $class
+     */
+    protected function applyCLassProperties($class)
+    {
+        foreach (array_filter($this->classProperties()) as $property => $value) {
+            if (is_array($value)) {
+                $classProperty = $class->addProperty($property, $value['value']);
+                if (isset($value['visibility'])) {
+                    $classProperty->setVisibility($value['visibility']);
+                }
+                if (isset($value['comment'])) {
+                    $classProperty->addComment($value['comment']);
+                }
+            } else {
+                $class->addProperty($property, $value);
+            }
+        }
+    }
+
+    /**
      * @param $params
      * @return string
      * @throws \Exception
@@ -151,15 +171,14 @@ abstract class ClassGenerator
                 }
             }
         }
+        $this->applyCLassProperties($class);
         foreach (array_filter($this->classUses()) as $alias => $namespace) {
             $this->phpNamespace->addUse($namespace, is_numeric($alias) ? null : $alias);
         }
         foreach ($this->phpDocComments() as $comment) {
             $this->phpClass->addComment($comment);
         }
-        foreach (array_filter($this->phpProperties()) as $property => $value) {
-            $this->phpClass->addProperty($property, $value);
-        }
+
         foreach (array_filter($this->classConstants()) as $constant => $value) {
             $this->phpClass->addConstant($constant, $value);
         }
@@ -192,7 +211,7 @@ abstract class ClassGenerator
     public function renderToFile($params = [], $filePath = null)
     {
         $content = $this->render($params);
-        return file_put_contents($filePath ? $filePath : $this->output, $content);
+        return file_put_contents($filePath ?: $this->output, $content);
     }
 
     /**
@@ -222,7 +241,7 @@ abstract class ClassGenerator
     /**
      * @return array
      */
-    protected function phpProperties()
+    protected function classProperties()
     {
         return [];
     }

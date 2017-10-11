@@ -23,7 +23,7 @@ class Demo extends ClassGenerator
         $method->addBody('return ?;', [$this->params['value']]);
     }
 
-    protected function phpProperties()
+    protected function classProperties()
     {
         return ['id' => 100, 'name' => 'myParam'];
     }
