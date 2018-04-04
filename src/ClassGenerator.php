@@ -192,7 +192,7 @@ abstract class ClassGenerator
         $generatedBy = $this->classGeneratedBy();
         $this->phpFile->addComment(is_array($generatedBy) ? join("\n", $generatedBy) : $generatedBy);
         $this->output = $this->formOutputPath();
-        return (string)$this->phpFile;
+        return str_replace("\n", PHP_EOL, (string)$this->phpFile);
     }
 
     /**
