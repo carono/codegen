@@ -127,16 +127,22 @@ abstract class ClassGenerator
     /**
      * @param ClassType $class
      */
-    protected function applyCLassProperties($class)
+    protected function applyClassProperties($class)
     {
         foreach (array_filter($this->classProperties()) as $property => $value) {
             if (is_array($value)) {
-                $classProperty = $class->addProperty($property, $value['value']);
+                if (isset($value['value'])) {
+                    $classProperty = $class->addProperty($property, $value['value']);
+                } else {
+                    $classProperty = $class->addProperty($property);
+                }
                 if (isset($value['visibility'])) {
                     $classProperty->setVisibility($value['visibility']);
                 }
                 if (isset($value['comment'])) {
-                    $classProperty->addComment($value['comment']);
+                    foreach ((array)$value['comment'] as $comment) {
+                        $classProperty->addComment($comment);
+                    }
                 }
             } else {
                 $class->addProperty($property, $value);
@@ -171,7 +177,7 @@ abstract class ClassGenerator
                 }
             }
         }
-        $this->applyCLassProperties($class);
+        $this->applyClassProperties($class);
         foreach (array_filter($this->classUses()) as $alias => $namespace) {
             $this->phpNamespace->addUse($namespace, is_numeric($alias) ? null : $alias);
         }
@@ -192,7 +198,7 @@ abstract class ClassGenerator
         $generatedBy = $this->classGeneratedBy();
         $this->phpFile->addComment(is_array($generatedBy) ? join("\n", $generatedBy) : $generatedBy);
         $this->output = $this->formOutputPath();
-        return str_replace("\n", PHP_EOL, (string)$this->phpFile);
+        return (string)$this->phpFile;
     }
 
     /**
