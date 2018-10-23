@@ -1,6 +1,7 @@
 {
   "name": "carono/codegen",
-  "description": "",
+  "license": "MIT",
+  "description": "PHP class generation",
   "type": "library",
   "authors": [
     {

@@ -1,3 +1,8 @@
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/carono/codegen/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/carono/codegen/?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/carono/codegen/v/stable)](https://packagist.org/packages/carono/codegen)
+[![Total Downloads](https://poser.pugx.org/carono/codegen/downloads)](https://packagist.org/packages/carono/codegen)
+[![License](https://poser.pugx.org/carono/codegen/license)](https://packagist.org/packages/carono/codegen)
+
 Установка
 =========
 `composer require carono/codegen`
