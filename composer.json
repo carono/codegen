@@ -11,7 +11,7 @@
     }
   ],
   "require": {
-    "nette/php-generator": "^2.6"
+    "nette/php-generator": "@stable"
   },
   "autoload": {
     "psr-4": {
