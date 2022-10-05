@@ -164,7 +164,7 @@ abstract class ClassGenerator
         }
         $class = $this->getPhpClass($className);
         if ($extends = ($this->extends ? $this->extends : $this->formExtends())) {
-            $this->phpClass->addExtend($extends);
+            $this->phpClass->setExtends($extends);
         }
         $reflection = new \ReflectionClass($this);
         foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
