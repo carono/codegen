@@ -189,7 +189,14 @@ abstract class ClassGenerator
             $this->phpClass->addConstant($constant, $value);
         }
         foreach (array_filter($this->classTraits()) as $trait => $resolutions) {
-            $this->phpClass->addTrait(is_numeric($trait) ? $resolutions : $trait, is_numeric($trait) ? [] : $resolutions);
+            if (is_numeric($trait)) {
+                $this->phpClass->addTrait($resolutions);
+            } else {
+                $traitUse = $this->phpClass->addTrait($trait);
+                foreach ((array)$resolutions as $resolution) {
+                    $traitUse->addResolution($resolution);
+                }
+            }
         }
         foreach (array_filter($this->classImplements()) as $implement) {
             $this->phpClass->addImplement($implement);
